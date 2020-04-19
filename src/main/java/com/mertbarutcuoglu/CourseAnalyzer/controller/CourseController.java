@@ -17,6 +17,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
+// Controller for the API
 @RestController
 public class CourseController {
     private static String apiBaseURL = "https://ubcgrades.com/api/grades/"; // API URL to perform requests;
@@ -34,6 +35,7 @@ public class CourseController {
         return new Course(courseID, courseNumber, courseSection, profName, fiveYearAverage, gradeDistributions);
     }
 
+    // EFFECTS: retrieves the name of the professor for given course
     private String retrieveProfName(String courseID, String courseNumber, String courseSection) throws IOException {
         CourseDetailsParser parser = new CourseDetailsParser();
         DataRetriever retriever = new DataRetriever();
@@ -43,6 +45,7 @@ public class CourseController {
         return profName;
     }
 
+    // EFFECTS: retrieves the five year average of the given course
     private List<Double> retrieveFiveYearAverage(String courseID, String courseNumber, String profName)
             throws IOException, ParseException {
         CourseDetailsParser parser = new CourseDetailsParser();
@@ -61,6 +64,7 @@ public class CourseController {
         return fiveYearAverage;
     }
 
+    // EFFECTS: retrieves the grade distribution of the given course over the past five years
     private List<Integer> retrieveGradeDistribution(String courseID, String courseNumber, String profName)
             throws IOException, ParseException {
         CourseDetailsParser parser = new CourseDetailsParser();

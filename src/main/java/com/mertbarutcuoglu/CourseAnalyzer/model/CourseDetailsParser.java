@@ -51,8 +51,8 @@ public class CourseDetailsParser {
         List<String> gradeRanges = createGradeRanges();
         JSONArray responseArray = (JSONArray) jsonParser.parse(response);
         profName = profName.split(",")[0]; // takes the surname
-        for (int i = 0; i < responseArray.size(); i++) {
-            JSONObject responseItem = (JSONObject) responseArray.get(i);
+        for (Object o : responseArray) {
+            JSONObject responseItem = (JSONObject) o;
             if (profName.equals((responseItem.get("instructor")).toString().split(",")[0].toUpperCase())) {
                 Map gradeDistribution = (HashMap<String, Integer>) responseItem.get("grades");
                 for (String range : gradeRanges) {

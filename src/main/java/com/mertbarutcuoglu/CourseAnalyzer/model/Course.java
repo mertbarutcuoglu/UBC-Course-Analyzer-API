@@ -63,9 +63,9 @@ public class Course {
         double sum = 0.0;
         int count = 0;
 
-        for (int i = 0; i < courseAveragesForYears.size(); i++) {
-            if (courseAveragesForYears.get(i) != 0.0) {
-                sum = sum + courseAveragesForYears.get(i);
+        for (Double courseAverage : courseAveragesForYears) {
+            if (courseAverage != 0.0) {
+                sum = sum + courseAverage;
                 count++;
             }
         }

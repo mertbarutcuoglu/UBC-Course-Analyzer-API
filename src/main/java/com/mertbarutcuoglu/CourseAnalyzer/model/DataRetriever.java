@@ -25,7 +25,6 @@ public class DataRetriever {
         return courseURL;
     }
 
-    // REQUIRES: active internet connection
     // EFFECTS: opens a connection to API
     public void sendGetRequest(String url) throws IOException {
         URL clientURL = new URL(url);
@@ -35,23 +34,21 @@ public class DataRetriever {
         connection.connect();
     }
 
-    // REQUIRES: active internet connection
     // EFFECTS: reads and returns the API response
     // Credits: https://dzone.com/articles/how-to-parse-json-data-from-a-rest-api-using-simpl
     public String getResponseAsStringFromURL(String url) throws IOException {
         sendGetRequest(url);
         URL clientURL = new URL(url);
-        String response = "";
+        StringBuilder response = new StringBuilder();
 
         Scanner scanner = new Scanner(clientURL.openStream());
         while (scanner.hasNext()) {
-            response = response + scanner.nextLine();
+            response.append(scanner.nextLine());
         }
         scanner.close();
-        return response;
+        return response.toString();
     }
 
-    // REQUIRES: active internet connection
     // MODIFIES: this
     // EFFECTS: retrieves name of the professor for the  course from SSC and returns it
     public HtmlPage retrieveProfName(String courseID, String courseNo, String courseSection)
