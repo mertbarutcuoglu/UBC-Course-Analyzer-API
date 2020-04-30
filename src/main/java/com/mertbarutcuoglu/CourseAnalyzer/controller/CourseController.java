@@ -26,21 +26,22 @@ public class CourseController {
     @GetMapping("/analyze")
     public Course analyzeCourse(@RequestParam(value = "courseID") String courseID,
                                 @RequestParam(value = "courseNumber") String courseNumber,
-                                @RequestParam(value = "courseSection") String courseSection)
+                                @RequestParam(value = "courseSection") String courseSection,
+                                @RequestParam(value = "isWinter") boolean isWinter)
             throws IOException, ParseException, NotEnoughDataException {
         courseID = courseID.toUpperCase();
-        String profName = retrieveProfName(courseID, courseNumber, courseSection);
+        String profName = retrieveProfName(courseID, courseNumber, courseSection, isWinter);
         List<Integer> gradeDistributions = retrieveGradeDistribution(courseID, courseNumber, profName);
         List<Double> fiveYearAverage = retrieveFiveYearAverage(courseID, courseNumber, profName);
         return new Course(courseID, courseNumber, courseSection, profName, fiveYearAverage, gradeDistributions);
     }
 
     // EFFECTS: retrieves the name of the professor for given course
-    private String retrieveProfName(String courseID, String courseNumber, String courseSection) throws IOException {
+    private String retrieveProfName(String courseID, String courseNumber, String courseSection, boolean isWinter) throws IOException {
         CourseDetailsParser parser = new CourseDetailsParser();
         DataRetriever retriever = new DataRetriever();
 
-        HtmlPage profNamePage = retriever.retrieveProfName(courseID, courseNumber, courseSection);
+        HtmlPage profNamePage = retriever.retrieveProfName(courseID, courseNumber, courseSection, isWinter);
         String profName = parser.parseProfName(profNamePage);
         return profName;
     }
@@ -82,5 +83,4 @@ public class CourseController {
         List<Integer> gradeDistributionsStudents = new ArrayList<>(gradeDistributions.values());
         return gradeDistributionsStudents;
     }
-
 }

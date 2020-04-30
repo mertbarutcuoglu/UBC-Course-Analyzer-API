@@ -11,17 +11,23 @@ import java.util.Scanner;
 
 // Represents an data retriever class with the URL of API
 public class DataRetriever {
-    private static String UBC_BASE_URL = "https://courses.students.ubc.ca/cs/courseschedule?sesscd=W&";
+    private static String UBC_BASE_URL = "https://courses.students.ubc.ca/cs/courseschedule?sesscd=";
 
     // EFFECTS: constructs DataRetriever class
     public DataRetriever(){
     }
 
     // EFFECTS: generates and returns the SSC URL for the given course
-    private String generateCourseURL(String courseID, String courseNo, String courseSection) {
-        String courseURL = UBC_BASE_URL + "pname=subjarea&tname=subj-section&dept=";
+    private String generateCourseURL(String courseID, String courseNo, String courseSection, boolean isWinter) {
+        String courseURL;
+        if (isWinter) {
+            courseURL = UBC_BASE_URL +"W&" + "pname=subjarea&tname=subj-section&dept=";
+
+        } else {
+            courseURL = UBC_BASE_URL +"S&" + "pname=subjarea&tname=subj-section&dept=";
+        }
         courseURL = courseURL + courseID + "&course=" + courseNo;
-        courseURL = courseURL + "&sessyr=2019&section=" + courseSection;
+        courseURL = courseURL + "&sessyr=2020&section=" + courseSection;
         return courseURL;
     }
 
@@ -51,10 +57,10 @@ public class DataRetriever {
 
     // MODIFIES: this
     // EFFECTS: retrieves name of the professor for the  course from SSC and returns it
-    public HtmlPage retrieveProfName(String courseID, String courseNo, String courseSection)
+    public HtmlPage retrieveProfName(String courseID, String courseNo, String courseSection, boolean isWinter)
             throws IndexOutOfBoundsException, IOException {
 
-        String courseURL = generateCourseURL(courseID, courseNo, courseSection);
+        String courseURL = generateCourseURL(courseID, courseNo, courseSection, isWinter);
         WebClient client = new WebClient();
         client.getOptions().setCssEnabled(false);
         client.getOptions().setJavaScriptEnabled(false);
