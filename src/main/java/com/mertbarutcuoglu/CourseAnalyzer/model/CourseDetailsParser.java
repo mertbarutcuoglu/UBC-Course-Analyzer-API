@@ -31,9 +31,8 @@ public class CourseDetailsParser {
 
         for (int i = 0; i < responseArray.size(); i++) {
             JSONObject responseItem = (JSONObject) responseArray.get(i);
-            if (profName.equals((responseItem.get("instructor")).toString().split(",")[0].toUpperCase())) {
-                JSONObject coursesStats = (JSONObject) responseItem.get("stats");
-                Double average = (Double) coursesStats.get("average");
+            if (profName.equals((responseItem.get("educators")).toString().split(",")[0].toUpperCase())) {
+                Double average = (Double) responseItem.get("average");
                 termAverages.add(average);
             }
         }
@@ -53,13 +52,13 @@ public class CourseDetailsParser {
         profName = profName.split(",")[0]; // takes the surname
         for (Object o : responseArray) {
             JSONObject responseItem = (JSONObject) o;
-            if (profName.equals((responseItem.get("instructor")).toString().split(",")[0].toUpperCase())) {
+            if (profName.equals((responseItem.get("educators")).toString().split(",")[0].toUpperCase())) {
                 Map gradeDistribution = (HashMap<String, Integer>) responseItem.get("grades");
                 for (String range : gradeRanges) {
                     Integer numPeopleForRange = ((Number) gradeDistribution.get(range)).intValue();
                     Integer currentNumPeopleForRange = overallGradeDistribution.get(range);
                     if (currentNumPeopleForRange == null) {
-                        currentNumPeopleForRange = new Integer(numPeopleForRange);
+                        currentNumPeopleForRange = Integer.valueOf(numPeopleForRange);
                         overallGradeDistribution.put(range, currentNumPeopleForRange);
                     } else {
                         overallGradeDistribution.put(range, currentNumPeopleForRange + numPeopleForRange);
