@@ -20,7 +20,7 @@ import java.util.Map;
 // Controller for the API
 @RestController
 public class CourseController {
-    private static String apiBaseURL = "https://ubcgrades.com/api/grades/"; // API URL to perform requests;
+    private static String apiBaseURL = "https://ubcgrades.com/api/v1/grades/UBCV/"; // API URL to perform requests;
 
     @CrossOrigin
     @GetMapping("/analyze")
