@@ -21,6 +21,8 @@ import java.util.Map;
 @RestController
 public class CourseController {
     private static String apiBaseURL = "https://ubcgrades.com/api/v1/grades/UBCV/"; // API URL to perform requests;
+    private List<Integer> gradeDistributions;
+    private List<Double> fiveYearAverage;
 
     @CrossOrigin
     @GetMapping("/analyze")
@@ -31,8 +33,7 @@ public class CourseController {
             throws IOException, ParseException, NotEnoughDataException {
         courseID = courseID.toUpperCase();
         String profName = retrieveProfName(courseID, courseNumber, courseSection, isWinter);
-        List<Integer> gradeDistributions = retrieveGradeDistribution(courseID, courseNumber, profName);
-        List<Double> fiveYearAverage = retrieveFiveYearAverage(courseID, courseNumber, profName);
+        retrieveCourseData(courseID, courseNumber, profName);
         return new Course(courseID, courseNumber, courseSection, profName, fiveYearAverage, gradeDistributions);
     }
 
@@ -52,6 +53,24 @@ public class CourseController {
         CourseDetailsParser parser = new CourseDetailsParser();
         DataRetriever retriever = new DataRetriever();
 
+
+        // Requests average for five winter terms from 2014 to 2019, not including 2019
+        for (int i = 2014; i < 2019; i++) {
+            String term = i + "W";
+            String apiUrl = apiBaseURL + term + "/" + courseID + "/" + courseNumber;
+            String apiResponse = retriever.getResponseAsStringFromURL(apiUrl);
+
+        }
+        return fiveYearAverage;
+    }
+
+    // EFFECTS: retrieves the grade distribution and the five year average of the given course over the past five years
+    private void retrieveCourseData(String courseID, String courseNumber, String profName)
+            throws IOException, ParseException {
+        CourseDetailsParser parser = new CourseDetailsParser();
+        DataRetriever retriever = new DataRetriever();
+
+        Map<String, Integer> gradeDistributions = new LinkedHashMap<>();
         List<Double> fiveYearAverage = new ArrayList<>();
 
         // Requests average for five winter terms from 2014 to 2019, not including 2019
@@ -59,28 +78,12 @@ public class CourseController {
             String term = i + "W";
             String apiUrl = apiBaseURL + term + "/" + courseID + "/" + courseNumber;
             String apiResponse = retriever.getResponseAsStringFromURL(apiUrl);
+            parser.parseGradeDistribution(apiResponse, profName, gradeDistributions);
             List<Double> termAverages = parser.parseAverage(apiResponse, profName);
             fiveYearAverage.addAll(termAverages);
         }
-        return fiveYearAverage;
-    }
 
-    // EFFECTS: retrieves the grade distribution of the given course over the past five years
-    private List<Integer> retrieveGradeDistribution(String courseID, String courseNumber, String profName)
-            throws IOException, ParseException {
-        CourseDetailsParser parser = new CourseDetailsParser();
-        DataRetriever retriever = new DataRetriever();
-
-        Map<String, Integer> gradeDistributions = new LinkedHashMap<>();
-
-        // Requests average for five winter terms from 2014 to 2019, not including 2019
-        for (int i = 2014; i < 2019; i++) {
-            String term = i + "W";
-            String apiUrl = apiBaseURL + term + "/" + courseID + "/" + courseNumber;
-            String apiResponse = retriever.getResponseAsStringFromURL(apiUrl);
-            parser.parseGradeDistribution(apiResponse, profName, gradeDistributions);
-        }
-        List<Integer> gradeDistributionsStudents = new ArrayList<>(gradeDistributions.values());
-        return gradeDistributionsStudents;
+        this.gradeDistributions = new ArrayList<>(gradeDistributions.values());
+        this.fiveYearAverage = fiveYearAverage;
     }
 }

@@ -27,7 +27,7 @@ public class DataRetriever {
             courseURL = UBC_BASE_URL +"S&" + "pname=subjarea&tname=subj-section&dept=";
         }
         courseURL = courseURL + courseID + "&course=" + courseNo;
-        courseURL = courseURL + "&sessyr=2020&section=" + courseSection;
+        courseURL = courseURL + "&sessyr=2021&section=" + courseSection;
         return courseURL;
     }
 
